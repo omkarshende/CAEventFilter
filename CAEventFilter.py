@@ -2,20 +2,21 @@ import pandas as pd
 import sys
 
 # Read in command line arguments for files
-check_file = sys.argv[1]
-input_files = sys.argv[2:]
-num_files = len(input_files)
+email_file = sys.argv[1]
+roster_files = sys.argv[2:]
+num_rosters = len(roster_files)
 
-check_file_data = pd.read_csv(check_file, header=None)
-input_data = pd.DataFrame()
+emails = pd.read_csv(email_file, header=None)
+roster = pd.DataFrame()
 
 # Iterate through roster files using Ahad's formatting and build up a database of emails
-for i in range(num_files):
-    input_data = pd.concat([input_data, pd.read_csv(input_files[i], encoding='latin-1', header=0, usecols=['Email', 'Spouse/Partner Email'])])
+for i in range(num_rosters):
+    roster = pd.concat([roster, pd.read_csv(roster_files[i], encoding='latin-1', header=0, usecols=['Email', 'Spouse/Partner Email'])])
 
 # Create a mask that checks if the input emails exist in the database
-check_file_data['isvalid'] = (check_file_data.iloc[:,0].isin(input_data.iloc[:,0]) | check_file_data.iloc[:,0].isin(input_data.iloc[:,1]))
-output_data = check_file_data[check_file_data['isvalid'] == True]
+emails['isvalid'] = (emails.iloc[:,0].isin(roster.iloc[:,0]) | emails.iloc[:,0].isin(roster.iloc[:,1]))
+output = emails[emails['isvalid'] == True]
 
 # Print out the data as a list
-output_data.iloc[:,0].to_csv('output.csv',index=False, header=False)
+output.iloc[:,0].to_csv('output.csv',index=False, header=False)
+print("{0:2d} emails matched from {1:2d} submissions".format(len(output.index),len(emails.index)))
