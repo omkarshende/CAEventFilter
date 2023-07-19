@@ -11,11 +11,11 @@ roster = pd.DataFrame()
 
 # Iterate through roster files using Ahad's formatting and build up a database of emails
 for i in range(num_rosters):
-    roster = pd.concat([roster, pd.read_csv(roster_files[i], encoding='latin-1', header=0, usecols=['Email', 'Spouse/Partner Email'])])
+    new_roster = pd.read_csv(roster_files[i], encoding='latin-1', header=0, usecols=['Email', 'Spouse/Partner Email'])
+    roster = pd.concat([roster, new_roster])
 
-# Create a mask that checks if the input emails exist in the database
-emails['isvalid'] = (emails.iloc[:,0].isin(roster.iloc[:,0]) | emails.iloc[:,0].isin(roster.iloc[:,1]))
-output = emails[emails['isvalid'] == True]
+# Check if the input emails exist in the database in either student or partner columns
+output = emails[ emails.iloc[:,0].isin(roster.iloc[:,0]) | emails.iloc[:,0].isin(roster.iloc[:,1]) ]
 
 # Print out the data as a list
 output.iloc[:,0].to_csv('output.csv',index=False, header=False)
