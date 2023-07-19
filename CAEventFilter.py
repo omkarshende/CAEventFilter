@@ -19,4 +19,4 @@ output = emails[emails['isvalid'] == True]
 
 # Print out the data as a list
 output.iloc[:,0].to_csv('output.csv',index=False, header=False)
-print("{0:2d} emails matched from {1:2d} submissions".format(len(output.index),len(emails.index)))
+print("{0:5d} emails matched from {1:5d} submissions".format(len(output.index),len(emails.index)))
